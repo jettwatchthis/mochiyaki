@@ -1,0 +1,281 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pemesanan Makanan</title>
+
+<style>
+body{
+  font-family:Arial, sans-serif;
+  margin:0;
+  background:#ffe4b5; /* Orange muda untuk background */
+  padding-bottom:80px;
+  color: #333; /* Warna teks default */
+}
+
+header{
+  background:#ff6b35; /* Orange gelap */
+  color:white;
+  padding:15px;
+  text-align:center;
+  position:relative;
+}
+
+.auth{
+  position:absolute;
+  right:15px;
+  top:15px;
+}
+
+.auth button{
+  background:#ff8c42; /* Orange sedang */
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.auth button:hover{
+  background:#ff6b35; /* Lebih gelap saat hover */
+}
+
+.container{
+  padding:20px 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+}
+
+.card{
+  background:#ff8c42; /* Orange sedang untuk kartu */
+  border-radius:14px;
+  overflow:hidden;
+  text-align:left;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  transition:0.3s;
+  color: white; /* Teks putih pada kartu orange */
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  background:#ff6b35; /* Lebih gelap saat hover */
+}
+
+.card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:16px;
+}
+
+.card-content h3{
+  margin:0 0 6px;
+  font-size:20px;
+}
+
+.card-content p{
+  margin:0 0 10px;
+  font-size:14px;
+  color:#fffacd; /* Kuning muda untuk deskripsi */
+}
+
+.price{
+  font-size:18px;
+  font-weight:bold;
+  color:#ffffff; /* Putih untuk harga */
+}
+
+.card button{
+  background:#ff4500; /* Orange merah */
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.card button:hover{
+  background:#ff6b35;
+}
+
+.cart{
+  background:#ff8c42; /* Orange sedang untuk keranjang */
+  color:white;
+  padding:20px;
+  margin:20px 40px;
+  border-radius:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.cart h2{
+  margin-top:0;
+}
+
+.cart ul{
+  list-style:none;
+  padding:0;
+}
+
+.cart li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.cart button{
+  background:#ff4500;
+  color:white;
+  border:none;
+  padding:4px 8px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+.cart button:hover{
+  background:#ff6b35;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#ff6b35; /* Orange gelap */
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+}
+
+.bottom-nav button{
+  background:none;
+  border:none;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  padding:10px;
+}
+
+.bottom-nav button:hover{
+  background:#ff8c42;
+  border-radius:8px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Pemesanan Makanan</h1>
+  <div class="auth">
+    <button>Login</button>
+    <button>Register</button>
+  </div>
+</header>
+
+ <div class="container">
+
+  <div class="card">
+    <img src="img/3.jpeg" alt="Ice Cream">
+    <div class="card-content">
+      <h3>Mochi Udang</h3>
+      <p>Mochi Udang lembut.</p>
+      <div class="price">Rp 15.000</div>
+      <button onclick="addToCart('Ice Cream Vanilla',15000)">Tambah</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="img/2.jpeg" alt="Nasi Goreng">
+    <div class="card-content">
+      <h3>All Varian</h3>
+      <p>Keju,Crab stik,Telur puyuh (Best seller).</p>
+      <div class="price">Rp 10.000</div>
+      <button onclick="addToCart('Nasi Goreng Spesial',25000)">Tambah</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="img/1.jpeg" alt="Ayam Goreng">
+    <div class="card-content">
+      <h3>All Varian</h3>
+      <p>Keju,Crab stik,Telur puyuh (Best seller).</p>
+      <div class="price">Rp 10.000</div>
+      <button onclick="addToCart('Ayam Goreng',18000)">Tambah</button>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="cart">
+  <h2>Keranjang</h2>
+  <ul id="cartList"></ul>
+  <h3>Total: Rp <span id="total">0</span></h3>
+</div>
+
+<div class="bottom-nav">
+  <button>🏠 Beranda</button>
+  <button>📦 Pesanan</button>
+  <button>🔔 Notifikasi</button>
+  <button>💬 Chat</button>
+</div>
+
+<script>
+let cart = {};
+let total = 0;
+
+function addToCart(name, price){
+  if(!cart[name]){
+    cart[name] = { price: price, qty: 0 };
+  }
+  cart[name].qty++;
+  renderCart();
+}
+
+function increaseQty(name){
+  cart[name].qty++;
+  renderCart();
+}
+
+function decreaseQty(name){
+  cart[name].qty--;
+  if(cart[name].qty <= 0){
+    delete cart[name];
+  }
+  renderCart();
+}
+
+function renderCart(){
+  const list = document.getElementById('cartList');
+  list.innerHTML = '';
+  total = 0;
+
+  for(let item in cart){
+    total += cart[item].price * cart[item].qty;
+    list.innerHTML += `
+      <li>
+        <span>${item}</span>
+        <div>
+          <button onclick="decreaseQty('${item}')">➖</button>
+          <strong style="margin:0 8px;">${cart[item].qty}</strong>
+          <button onclick="increaseQty('${item}')">➕</button>
+        </div>
+      </li>
+    `;
+  }
+
+  document.getElementById('total').innerText = total;
+}
+</script>
+
+</body>
+</html>
